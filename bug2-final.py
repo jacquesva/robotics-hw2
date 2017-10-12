@@ -8,18 +8,30 @@ import matplotlib.pyplot as plt
 threesixty = 39.0
 WHEEL_RAD = 3.25
 
+<<<<<<< HEAD
 BUG_POS = [0, 0, 90, 0] # x, y, theta, object_detected
 MAP = [BUG_POS] # list of bug positions
 
 # Turn left a certain amount
+=======
+BUG_POS = [0, 0, 90] # x, y, theta
+MAP = [BUG_POS]
+Q_GOAL = [0, 100]
+
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
 def left_deg(deg):
     if deg < 0:
 	right_deg(-deg)
         return
+<<<<<<< HEAD
     # Update bug position and map
     BUG_POS[2] += deg
     MAP.append(list(BUG_POS))
     # Turn
+=======
+    BUG_POS[2] += deg
+    MAP.append(list(BUG_POS))
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
     enc_tgt(1, 1, int(deg * threesixty / 360.0))
     while read_enc_status():
         left_rot()
@@ -39,11 +51,17 @@ def right_deg(deg):
 
 # Move forward a certain amount
 def fwd_cm(dist):
+<<<<<<< HEAD
     # Update bug position and map
     BUG_POS[0] += dist * math.cos(math.radians(BUG_POS[2]))
     BUG_POS[1] += dist * math.sin(math.radians(BUG_POS[2]))
     MAP.append(list(BUG_POS))
     # Move
+=======
+    BUG_POS[0] += dist * math.cos(math.radians(BUG_POS[2]))
+    BUG_POS[1] += dist * math.sin(math.radians(BUG_POS[2]))
+    MAP.append(list(BUG_POS))
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
     enc_tgt(1, 1, cm2pulse(dist))
     while read_enc_status():
         fwd()
@@ -51,14 +69,21 @@ def fwd_cm(dist):
 
 # Converts cm to pulses for fwd_cm()
 def cm2pulse(dist):
+<<<<<<< HEAD
     return int(dist / (2 * math.pi * WHEEL_RAD) * 18)
 
 # Calculates euclidean distance for isatpoint(), looks only at first two parts of given vectors
+=======
+    return int(dist / (2 * math.pi * WHEEL_RAD) * 18)   
+
+
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
 def dist(p1, p2):
     return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
 # Returns if two points are close enough together to be considered at the same point    
 def isatpoint(p1, p2):
+<<<<<<< HEAD
     if dist(p1, p2) < 3:
         return True
     return False
@@ -83,10 +108,31 @@ def draw_map():
     ax.quiver(x, y, u, v, colors)
     plt.draw()
     plt.show()
+=======
+    if dist(p1, p2) < 2.9:
+        return True
+    return False
+
+def draw_map():
+    print(len(MAP))
+    x, y, u, v = [], [], [], []
+    for i in MAP:
+        x.append(i[0])
+        y.append(i[1])
+        u.append(math.cos(math.radians(i[2])))
+        v.append(math.sin(math.radians(i[2])))
+    plt.figure()
+    ax = plt.gca()
+    ax.quiver(x, y, u, v)
+    plt.draw()
+    plt.show()
+# test accuracy  of fwd_cm
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
 
 # Bug 2 algorithm
 def bug2(Q_GOAL):
     while True:
+<<<<<<< HEAD
 	# Move fwd until object detected
         while (us_dist(15) > 10):
             fwd_cm(5)
@@ -116,34 +162,68 @@ def bug2(Q_GOAL):
 	    # If too close to right, turn left and move forward
             if right < 10:
 		BUG_POS[3] = 1
+=======
+        while (us_dist(15) > 10):
+            fwd_cm(5)
+            sleep(0.2)
+            if isatpoint(BUG_POS, Q_GOAL):
+                return True
+        left_deg(90)
+        hit_point = list(BUG_POS)
+        
+        while True:
+            servo(0)
+            sleep(0.2)
+            right = us_dist(15)
+            servo(90)
+            sleep(0.2)
+            forward = us_dist(15)
+            # right sensor and fwd sensor tests
+            if right < 10:
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
                 left_deg(30)
                 sleep(0.25)
                 fwd_cm(3)
                 sleep(0.25)
             if not right < 25:
+<<<<<<< HEAD
 		# If nothing found on right, check right-forward diagonal
                 servo(45)
                 sleep(0.2)
 		# If too close on diagonal, turn left and move forward
                 if us_dist(15) < 25:
 		    BUG_POS[3] = 1
+=======
+                servo(45)
+                sleep(0.2)
+                if us_dist(15) < 25:
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
                     left_deg(30)
                     sleep(0.25)
                     fwd_cm(3)
                     sleep(0.25)
+<<<<<<< HEAD
                 # If nothing on right side is found, move forward and turn right
 		else:
+=======
+                else:
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
                     fwd_cm(3)
                     sleep(0.25)
                     right_deg(30)
                     sleep(0.25)
+<<<<<<< HEAD
 	    # If forward and right sides find obstacles, turn left and move forward
             elif forward < 25:
 		BUG_POS[3] = 1
+=======
+            elif forward < 25:
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
                 left_deg(30)
                 sleep(0.25)
                 fwd_cm(3)
                 sleep(0.25)
+<<<<<<< HEAD
 	    # If right obstacle detected but front clear, move forward
             else:
 		BUG_POS[3] = 1
@@ -163,24 +243,48 @@ def bug2(Q_GOAL):
 		# Debug output
                 print("reached m-line")
 		# Align robot onto m-line
+=======
+            else:
+                fwd_cm(5)
+                sleep(0.25)
+            # do move following bound
+	    print BUG_POS            
+        
+            if isatpoint(BUG_POS, Q_GOAL):
+                return True
+            if isatpoint(BUG_POS, hit_point):
+                return False
+            if abs(BUG_POS[0]) < 2 and dist(BUG_POS, Q_GOAL) < dist(hit_point, Q_GOAL):
+                print("reached mline")
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
 		left_deg(90 - BUG_POS[2])
 		sleep(0.3)
 		servo(90)
 		sleep(0.25)
+<<<<<<< HEAD
 		# If obstacle is in front of robot, continue following original obstacle
 		if us_dist(15) < 15:
 		    continue
+=======
+		if us_dist(15) < 15:
+		    continue
+
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
 		break
 
                 
 if __name__ == "__main__":
     enable_servo()
     servo(90)
+<<<<<<< HEAD
     # Q_GOAL is given by user
     y_goal = int(raw_input("Enter goal y-coordinate: "))
     # Adjust for sensor inaccuracies, maintain robot's coord syst in scaled down cm consistent with sensors
     Q_GOAL = [0, y_goal / 1.3]
     if bug2(Q_GOAL):
+=======
+    if bug2():
+>>>>>>> c3835eb10fa9b104b6a7f4a9b31ac32fd001aa2d
         print("Goal found!")
     else:
         print("Impossible :(")
